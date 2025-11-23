@@ -1,0 +1,3 @@
+pyfiglet
+wikipedia-api
+mysql-connector-python

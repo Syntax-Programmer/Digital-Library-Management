@@ -1,0 +1,98 @@
+Database Creation:
+------------------
+    CREATE DATABASE Library;
+
+
+Users Table:
+------------
+
+Creation:
+    CREATE TABLE users (
+        userId int NOT NULL PRIMARY KEY,
+        userName varchar(50) NOT NULL,
+        phoneNumber varchar(13),
+        emailId varchar(40) NOT NULL,
+        password varchar(40) NOT NULL,
+        adminStatus varchar(9) NOT NULL DEFAULT "not admin"
+    );
+
+Values:
+    INSERT INTO users
+    VALUES (1023, 'Aman', '9564823675', 'abc@gmail.com', 'Aman@1023', "not admin"),
+           (1024, 'Cman', '8564526545', 'cman1024@gmail.com', 'Cman@1024', "not admin"),
+           (1025, 'Bman', '8623254587', 'def@gmail.com', 'Bman@1025', 'admin'),
+           (1026, 'Dman', '9456875462', 'dman1026@gmail.com', 'Dman@1026', "not admin"),
+           (1028, 'Eman', '8564231547', 'eman1028@gmail.com', 'Eman@1028', "not admin");
+
+
+Books Table:
+------------
+
+Creation:
+    CREATE TABLE books (
+        bookId int NOT NULL PRIMARY KEY,
+        bookName varchar(50) NOT NULL,
+        publicationYear int,
+        author varchar(40),
+        issueStatus varchar(10) NOT NULL DEFAULT 'not issued'
+    );
+
+Values:
+    INSERT INTO books
+    VALUES (3000, 'English', 2005, NULL, 'not issued'),
+           (4000, 'Hindi', 2011, NULL, 'not issued'),
+           (5000, 'History', 2010, NULL, 'not issued'),
+           (5263, 'physics', 2003, 'H.C. Verma', 'issued'),
+           (5658, 'cs', 2016, 'Sumita Arora', 'not issued'),
+           (12305, 'mathematics', 2011, 'V.V. Acharya', 'not issued');
+
+
+
+Notes Table:
+------------
+
+Creation:
+    CREATE TABLE notes (
+        userId int NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users(userId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        noteNumber int NOT NULL,
+        noteTitle varchar(50),
+        noteDescription varchar(10000),
+        updateDate date NOT NULL,
+        updateTime time NOT NULL
+    );
+
+Values:
+    INSERT INTO notes
+    VALUES (1025, 1, 'ISRO', "The Indian Space Research Organixation (ISRO) is the national space agency of India. It operates as the primary research and development arm of the Department of Space (DoS), which is directly overseen by the Prime Minister of India, while the Chairman of ISRO also acts as the executive of DoS.", '2023-12-14', '18:03:18'),
+           (1023, 1, "Massachusetts Institute Of Technology", "The Massachusetts Institute of Technology (MIT) is a private land-grant research university in Cambridge, Massachusetts. Established in 1861, MIT has played a significant role in the development of many areas of modern technology and science. Its reputation for innnovation and rankings have made it one of the most prestigious university in the world.", '2023-12-14', '17:35:40');
+
+
+IssuedBookDetails Table:
+------------------------
+
+Creation:
+    CREATE TABLE issuedbooksdetails (
+        userId int NOT NULL,
+        bookId int NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users(userId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        FOREIGN KEY (bookId) REFERENCES books(bookId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        issueDate date,
+        issueTime time,
+        returnDate date,
+        returnTime time,
+        fineInRs int NOT NULL DEFAULT 0,
+        bookName varchar(50) NOT NULL
+    );
+
+Values:
+    INSERT INTO issuedbooksdetails
+    VALUES (1025, 5263, '2023-12-14', '14:31:11', NULL, NULL, 0, 'physics'),
+           (1023, 5658, '2023-12-14', '14:31:53', '2023-12-14', '14:32:04', 0, 'cs'),
+           (1023, 12305, '2023-12-14', '14:32:28', '2023-12-14', '14:32:34', 0, 'mathematics');
