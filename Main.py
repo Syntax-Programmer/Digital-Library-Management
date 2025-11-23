@@ -2,7 +2,7 @@ import mysql.connector
 import pyfiglet
 import wikipediaapi
 import os
-
+import json
 from datetime import datetime
 
 
@@ -11,12 +11,18 @@ def connectToLibrary():
     @brief Creates a database connection to the Library database.
     @return A tuple of database connection and cursor object.
     """
+    user = "None"
+    passwd = "None"
+    with open("sqlinfo.json", "r") as fh:
+        file_data = json.load(fh)
+        user = file_data["uname"]
+        passwd = file_data["passwd"]
+
     con = mysql.connector.connect(
         host="localhost",
-        user="anand",
-        password="ANAND6308anand",
+        user=user,
+        password=passwd,
         database="Library",
-        collation="utf8mb4_unicode_520_ci",
     )
     if not con.is_connected():
         print("Can't connect to database, try reloading.")
@@ -871,7 +877,9 @@ def addAdmin(db_con, db_cursor) -> None:
     elif admin_status[0][0] == "admin":
         print(f"The user with the Id: {to_promote} is already an admin.")
     elif choice in ["yes", "y"]:
-        db_cursor.execute(f"UPDATE users SET adminStatus = 'admin' WHERE userID = {to_promote}")
+        db_cursor.execute(
+            f"UPDATE users SET adminStatus = 'admin' WHERE userID = {to_promote}"
+        )
         db_con.commit()
         print(f"The user with Id: {to_promote} successfully promoted to admin status.")
     else:
@@ -1596,7 +1604,7 @@ def printMainInterface() -> None:
     """
     clearScreen()
     print(
-        f"\033[1;34m{pyfiglet.figlet_format("Welcome to the", font="banner3", width=1000)}\n{pyfiglet.figlet_format("Digital Library", font="banner3", width=1000)}\033[0m"
+        f"\033[1;34m{pyfiglet.figlet_format('Welcome to the', font='banner3', width=1000)}\n{pyfiglet.figlet_format('Digital Library', font='banner3', width=1000)}\033[0m"
     )
     print("\n\033[3;34m+--+\033[0m")
     print("Home")
